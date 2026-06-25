@@ -1,7 +1,0 @@
-C:\Users\User\Documents\pre-dev\Windows-Taskbar-Dock\dist\WindowsTaskbarDock.pdb
-C:\Users\User\Documents\pre-dev\Windows-Taskbar-Dock\dist\D3DCompiler_47_cor3.dll
-C:\Users\User\Documents\pre-dev\Windows-Taskbar-Dock\dist\PenImc_cor3.dll
-C:\Users\User\Documents\pre-dev\Windows-Taskbar-Dock\dist\PresentationNative_cor3.dll
-C:\Users\User\Documents\pre-dev\Windows-Taskbar-Dock\dist\vcruntime140_cor3.dll
-C:\Users\User\Documents\pre-dev\Windows-Taskbar-Dock\dist\wpfgfx_cor3.dll
-C:\Users\User\Documents\pre-dev\Windows-Taskbar-Dock\dist\WindowsTaskbarDock.exe
