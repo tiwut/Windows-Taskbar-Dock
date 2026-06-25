@@ -1,0 +1,1 @@
+C:\Users\User\Documents\pre-dev\Windows-Taskbar-Dock\src\obj\Debug\net8.0-windows\win-x64\WindowsTaskbarDock_MarkupCompile.cache

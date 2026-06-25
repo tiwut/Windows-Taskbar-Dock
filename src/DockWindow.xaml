@@ -1,0 +1,271 @@
+<Window x:Class="WindowsTaskbarDock.DockWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        Title="Dock Window"
+        Width="500"
+        Height="500"
+        AllowsTransparency="False"
+        WindowStyle="None"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        BorderThickness="0"
+        BorderBrush="Transparent"
+        ShowInTaskbar="False"
+        Topmost="True"
+        WindowStartupLocation="Manual"
+        Loaded="Window_Loaded">
+    
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome GlassFrameThickness="-1" 
+                            CornerRadius="0"
+                            CaptionHeight="0"
+                            ResizeBorderThickness="0"
+                            UseAeroCaptionButtons="False"/>
+    </shell:WindowChrome.WindowChrome>
+    
+    <Window.Resources>
+        <SolidColorBrush x:Key="TextForegroundBrush" Color="White" />
+        <SolidColorBrush x:Key="SubTextForegroundBrush" Color="#80FFFFFF" />
+        <SolidColorBrush x:Key="ScrollBarThumbBrush" Color="#40FFFFFF" />
+        <SolidColorBrush x:Key="ScrollBarThumbHoverBrush" Color="#80FFFFFF" />
+        <SolidColorBrush x:Key="ScrollBarThumbDraggingBrush" Color="#A0FFFFFF" />
+        <SolidColorBrush x:Key="HoverBackgroundBrush" Color="#1AFFFFFF" />
+        <SolidColorBrush x:Key="HoverBorderBrush" Color="#2EFFFFFF" />
+        <SolidColorBrush x:Key="PressedBackgroundBrush" Color="#2EFFFFFF" />
+        <SolidColorBrush x:Key="PressedBorderBrush" Color="#40FFFFFF" />
+
+        <Style x:Key="ModernScrollBarThumb" TargetType="{x:Type Thumb}">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="IsTabStop" Value="False" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Border x:Name="rectangle"
+                                CornerRadius="3"
+                                Background="{DynamicResource ScrollBarThumbBrush}"
+                                Width="6"
+                                HorizontalAlignment="Right"
+                                Margin="0,0,2,0" />
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="rectangle" Property="Background" Value="{DynamicResource ScrollBarThumbHoverBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsDragging" Value="True">
+                                <Setter TargetName="rectangle" Property="Background" Value="{DynamicResource ScrollBarThumbDraggingBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ModernScrollBar" TargetType="{x:Type ScrollBar}">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Style.Triggers>
+                <Trigger Property="Orientation" Value="Vertical">
+                    <Setter Property="Width" Value="10" />
+                    <Setter Property="Height" Value="Auto" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                <Grid x:Name="Bg" Background="Transparent" SnapsToDevicePixels="true">
+                                    <Track x:Name="PART_Track" IsDirectionReversed="true" IsEnabled="{TemplateBinding IsEnabled}">
+                                        <Track.DecreaseRepeatButton>
+                                            <RepeatButton Command="{x:Static ScrollBar.LineUpCommand}" Visibility="Collapsed" />
+                                        </Track.DecreaseRepeatButton>
+                                        <Track.IncreaseRepeatButton>
+                                            <RepeatButton Command="{x:Static ScrollBar.LineDownCommand}" Visibility="Collapsed" />
+                                        </Track.IncreaseRepeatButton>
+                                        <Track.Thumb>
+                                            <Thumb Style="{StaticResource ModernScrollBarThumb}" />
+                                        </Track.Thumb>
+                                    </Track>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+                <Trigger Property="Orientation" Value="Horizontal">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ItemButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid Background="Transparent">
+                            <Border x:Name="HoverBorder"
+                                    CornerRadius="14"
+                                    BorderThickness="1"
+                                    Opacity="0"
+                                    Margin="2"
+                                    Background="{DynamicResource HoverBackgroundBrush}"
+                                    BorderBrush="{DynamicResource HoverBorderBrush}">
+                            </Border>
+
+                            <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        </Grid>
+                        
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="HoverBorder" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.15"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="HoverBorder" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.15"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="HoverBorder" Property="Background" Value="{DynamicResource PressedBackgroundBrush}"/>
+                                <Setter TargetName="HoverBorder" Property="BorderBrush" Value="{DynamicResource PressedBorderBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid x:Name="WindowRoot" RenderTransformOrigin="0.5,0.5">
+        <Grid.RenderTransform>
+            <TransformGroup>
+                <ScaleTransform x:Name="WindowScale" ScaleX="1" ScaleY="1"/>
+                <TranslateTransform x:Name="WindowTranslate" X="0" Y="25"/>
+            </TransformGroup>
+        </Grid.RenderTransform>
+        
+        <Grid Margin="0">
+            <Border x:Name="GlassFrame" 
+                    CornerRadius="12" 
+                    BorderThickness="0" 
+                    Background="Transparent"
+                    ClipToBounds="True">
+                
+                <Grid>
+                    <ScrollViewer Margin="8,12,8,12" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <ScrollViewer.Resources>
+                            <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource ModernScrollBar}"/>
+                        </ScrollViewer.Resources>
+                        
+                        <Grid>
+                            <TextBlock x:Name="EmptyLabel" 
+                                       Text="Folder is Empty" 
+                                       Foreground="{DynamicResource SubTextForegroundBrush}" 
+                                       FontSize="16" 
+                                       FontWeight="Medium" 
+                                       HorizontalAlignment="Center" 
+                                       VerticalAlignment="Center"
+                                       Margin="0,180,0,0"
+                                       Visibility="Collapsed"/>
+                            
+                            <ItemsControl x:Name="ItemsList" VerticalAlignment="Top">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Columns="5" VerticalAlignment="Top"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Style="{StaticResource ItemButtonStyle}" Click="Item_Click" Tag="{Binding}">
+                                            <Grid Width="90" Height="90" Margin="4">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="*"/>
+                                                </Grid.RowDefinitions>
+                                                
+                                                <Image Source="{Binding Icon}" 
+                                                       Width="48" 
+                                                       Height="48" 
+                                                       Grid.Row="0"
+                                                       Margin="0,8,0,2"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"
+                                                       RenderTransformOrigin="0.5,0.5">
+                                                    <Image.RenderTransform>
+                                                        <ScaleTransform x:Name="IconScale" ScaleX="1" ScaleY="1"/>
+                                                    </Image.RenderTransform>
+                                                    <Image.Style>
+                                                        <Style TargetType="Image">
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=IsMouseOver}" Value="True">
+                                                                    <DataTrigger.EnterActions>
+                                                                        <BeginStoryboard>
+                                                                            <Storyboard>
+                                                                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" To="1.30" Duration="0:0:0.12">
+                                                                                    <DoubleAnimation.EasingFunction>
+                                                                                        <QuadraticEase EasingMode="EaseOut"/>
+                                                                                    </DoubleAnimation.EasingFunction>
+                                                                                </DoubleAnimation>
+                                                                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" To="1.30" Duration="0:0:0.12">
+                                                                                    <DoubleAnimation.EasingFunction>
+                                                                                        <QuadraticEase EasingMode="EaseOut"/>
+                                                                                    </DoubleAnimation.EasingFunction>
+                                                                                </DoubleAnimation>
+                                                                            </Storyboard>
+                                                                        </BeginStoryboard>
+                                                                    </DataTrigger.EnterActions>
+                                                                    <DataTrigger.ExitActions>
+                                                                        <BeginStoryboard>
+                                                                            <Storyboard>
+                                                                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" To="1.0" Duration="0:0:0.12"/>
+                                                                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" To="1.0" Duration="0:0:0.12"/>
+                                                                            </Storyboard>
+                                                                        </BeginStoryboard>
+                                                                    </DataTrigger.ExitActions>
+                                                                </DataTrigger>
+                                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=IsPressed}" Value="True">
+                                                                    <DataTrigger.EnterActions>
+                                                                        <BeginStoryboard>
+                                                                            <Storyboard>
+                                                                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" To="1.50" Duration="0:0:0.06"/>
+                                                                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" To="1.50" Duration="0:0:0.06"/>
+                                                                            </Storyboard>
+                                                                        </BeginStoryboard>
+                                                                    </DataTrigger.EnterActions>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Image.Style>
+                                                </Image>
+ 
+                                                <TextBlock Text="{Binding Name}" 
+                                                           Foreground="{DynamicResource TextForegroundBrush}" 
+                                                           FontSize="11" 
+                                                           FontWeight="Medium" 
+                                                           Grid.Row="1"
+                                                           HorizontalAlignment="Center" 
+                                                           VerticalAlignment="Top"
+                                                           TextAlignment="Center"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           MaxWidth="82"
+                                                           Margin="2,2,2,6"/>
+                                            </Grid>
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Grid>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
