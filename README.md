@@ -2,6 +2,8 @@
 
 A premium, high-performance native Windows system tray companion inspired by macOS folder status docks. It runs quietly in the notification area, providing fluid, multi-column navigation for your files and directories with GPU-accelerated Acrylic blur backdrops, native rounded corners, and native drop shadows.
 
+<img width="779" height="746" alt="image" src="https://github.com/user-attachments/assets/1f96d94e-e0f0-47d2-8b0e-d5b13af3918e" />
+
 ---
 
 ## Features
