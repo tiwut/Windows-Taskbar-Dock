@@ -9,7 +9,7 @@ using System.Windows.Media.Animation;
 
 namespace WindowsTaskbarDock
 {
-    public partial class DockWindow : Window
+    public partial class DockWindow : Wpf.Ui.Controls.FluentWindow
     {
         public string FolderPath { get; }
         public int Level { get; }
@@ -26,8 +26,6 @@ namespace WindowsTaskbarDock
 
             App.ActiveWindows.Add(this);
             this.Deactivated += DockWindow_Deactivated;
-
-            ApplyThemeResources();
 
             WindowRoot.Opacity = 0;
         }
@@ -47,7 +45,6 @@ namespace WindowsTaskbarDock
         {
             base.OnSourceInitialized(e);
             PositionWindow();
-            NativeMethods.ApplyNativeAcrylicAndRounding(this);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -203,36 +200,6 @@ namespace WindowsTaskbarDock
                 }
             };
             sb.Begin();
-        }
-
-        private void ApplyThemeResources()
-        {
-            bool isDark = NativeMethods.IsWindowsDarkMode();
-
-            if (isDark)
-            {
-                this.Resources["TextForegroundBrush"] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 255, 255));
-                this.Resources["SubTextForegroundBrush"] = new SolidColorBrush(System.Windows.Media.Color.FromArgb(128, 255, 255, 255));
-                this.Resources["ScrollBarThumbBrush"] = new SolidColorBrush(System.Windows.Media.Color.FromArgb(64, 255, 255, 255));
-                this.Resources["ScrollBarThumbHoverBrush"] = new SolidColorBrush(System.Windows.Media.Color.FromArgb(128, 255, 255, 255));
-                this.Resources["ScrollBarThumbDraggingBrush"] = new SolidColorBrush(System.Windows.Media.Color.FromArgb(160, 255, 255, 255));
-                this.Resources["HoverBackgroundBrush"] = new SolidColorBrush(System.Windows.Media.Color.FromArgb(25, 255, 255, 255));
-                this.Resources["HoverBorderBrush"] = new SolidColorBrush(System.Windows.Media.Color.FromArgb(46, 255, 255, 255));
-                this.Resources["PressedBackgroundBrush"] = new SolidColorBrush(System.Windows.Media.Color.FromArgb(46, 255, 255, 255));
-                this.Resources["PressedBorderBrush"] = new SolidColorBrush(System.Windows.Media.Color.FromArgb(64, 255, 255, 255));
-            }
-            else
-            {
-                this.Resources["TextForegroundBrush"] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(32, 32, 32));
-                this.Resources["SubTextForegroundBrush"] = new SolidColorBrush(System.Windows.Media.Color.FromArgb(128, 0, 0, 0));
-                this.Resources["ScrollBarThumbBrush"] = new SolidColorBrush(System.Windows.Media.Color.FromArgb(64, 0, 0, 0));
-                this.Resources["ScrollBarThumbHoverBrush"] = new SolidColorBrush(System.Windows.Media.Color.FromArgb(128, 0, 0, 0));
-                this.Resources["ScrollBarThumbDraggingBrush"] = new SolidColorBrush(System.Windows.Media.Color.FromArgb(160, 0, 0, 0));
-                this.Resources["HoverBackgroundBrush"] = new SolidColorBrush(System.Windows.Media.Color.FromArgb(15, 0, 0, 0));
-                this.Resources["HoverBorderBrush"] = new SolidColorBrush(System.Windows.Media.Color.FromArgb(30, 0, 0, 0));
-                this.Resources["PressedBackgroundBrush"] = new SolidColorBrush(System.Windows.Media.Color.FromArgb(30, 0, 0, 0));
-                this.Resources["PressedBorderBrush"] = new SolidColorBrush(System.Windows.Media.Color.FromArgb(46, 0, 0, 0));
-            }
         }
 
         private void Item_Click(object sender, RoutedEventArgs e)

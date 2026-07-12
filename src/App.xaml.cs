@@ -18,6 +18,8 @@ namespace WindowsTaskbarDock
         {
             base.OnStartup(e);
 
+            Wpf.Ui.Appearance.ApplicationThemeManager.ApplySystemTheme();
+
             _notifyIcon = new System.Windows.Forms.NotifyIcon
             {
                 Icon = CreateGridIcon(),
